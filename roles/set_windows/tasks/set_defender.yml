@@ -1,0 +1,15 @@
+---
+# Add your content here for set_defender.yml
+# Example:
+# - name: Your task name
+#   your_module_name:
+#     your_parameter: value
+
+- name: Set Windows Defender
+  win_regedit:
+    path: HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender
+    name: DisableAntiSpyware
+    data: "{{ win_var_defender }}"
+    type: dword
+    state: present
+  when: win_var_defender is defined

@@ -1,0 +1,14 @@
+---
+# Add your content here for set_feature.yml
+# Example:
+# - name: Your task name
+#   your_module_name:
+#     your_parameter: value
+
+- name: Set Install Windows Feature
+  ansible.windows.win_feature:
+    name: "{{ item }}"
+    include_sub_features: true
+    state: present
+  loop: "{{ win_var_feature_install }}"
+  when: win_var_feature_install is defined

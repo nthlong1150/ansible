@@ -1,0 +1,11 @@
+---
+# Add your content here for set_timezone.yml
+# Example:
+# - name: Your task name
+#   your_module_name:
+#     your_parameter: value
+
+- name: Set timezone
+  win_timezone:
+    timezone: "{{ win_var_timezone }}"
+  when: win_var_timezone is defined

@@ -1,0 +1,88 @@
+---
+- name: Transfer system-auth
+  template:
+    src: "{{ rhel9_var_systemauth }}"
+    dest: /tmp/system-auth
+    mode: "0644"
+    owner: root
+    group: root
+  register: command_result
+  changed_when: false
+  when: rhel9_var_systemauth is defined
+  become: true
+
+- name: Transfer password-auth
+  template:
+    src: "{{ rhel9_var_passwordauth }}"
+    dest: /tmp/password-auth
+    mode: "0644"
+    owner: root
+    group: root
+  register: command_result2
+  changed_when: false
+  when: rhel9_var_passwordauth is defined
+  become: true
+
+- name: Diff system-auth
+  ansible.builtin.shell:
+    cmd: diff /tmp/system-auth /etc/pam.d/system-auth
+  register: command_result3
+  changed_when: false
+  when: 
+    - rhel9_var_systemauth is defined
+    - not command_result.failed
+  failed_when: command_result3.rc not in [0, 1]
+
+- name: Diff password-auth
+  ansible.builtin.shell:
+    cmd: diff /tmp/password-auth /etc/pam.d/password-auth
+  register: command_result4
+  changed_when: false
+  when: 
+    - rhel9_var_passwordauth is defined
+    - not command_result2.failed
+  failed_when: command_result4.rc not in [0, 1]
+
+- name: Backup system-auth
+  ansible.builtin.shell:
+    cmd: cp /etc/pam.d/system-auth /tmp/system-auth_bk
+  register: command_result5
+  when: 
+    - rhel9_var_systemauth is defined
+    - not command_result.failed
+    - command_result3.rc == 1
+  failed_when: command_result5.rc != 0
+  become: true
+
+- name: Backup password-auth
+  ansible.builtin.shell:
+    cmd: cp /etc/pam.d/password-auth /tmp/password-auth_bk
+  register: command_result6
+  when:
+    - rhel9_var_passwordauth is defined
+    - not command_result2.failed
+    - command_result4.rc == 1
+  failed_when: command_result6.rc != 0
+  become: true
+
+- name: Set system-auth
+  ansible.builtin.shell:
+    cmd: mv /tmp/system-auth /etc/pam.d/system-auth
+  when:
+    - rhel9_var_systemauth is defined
+    - not command_result.failed and command_result3.rc == 1
+    - not command_result5.failed
+  failed_when: command_result5.rc != 0
+  become: true
+
+- name: Set password-auth
+  ansible.builtin.shell:
+    cmd: mv /tmp/password-auth /etc/pam.d/password-auth
+  when:
+    - rhel9_var_passwordauth is defined
+    - not command_result2.failed
+    - command_result4.rc == 1
+    - not command_result6.failed
+  failed_when: command_result6.rc != 0
+  become: true
+

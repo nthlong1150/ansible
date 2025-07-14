@@ -1,0 +1,12 @@
+# Add your content here for add_user.yml
+# Example:
+# - name: Your task name
+#   your_module_name:
+#     your_parameter: value
+
+- name: Set Users to Disabled
+  win_user:
+    name: "{{ item }}"
+    account_disabled: true
+  loop: "{{ win_var_disabledUsers }}"
+  when: win_var_disabledUsers is defined

@@ -1,0 +1,31 @@
+---
+# Add your content here for set_ntp.yml
+# Example:
+# - name: Your task name
+#   your_module_name:
+#     your_parameter: value
+
+- name: Check NTP Server
+  win_shell: (Get-ItemProperty -Path "HKLM:\\SYSTEM\\CurrentControlSet\\Services\\W32Time\\Parameters" -Name "NtpServer").NtpServer
+  register: result_NTPServer
+  changed_when: False
+
+- name: Set NTP Server
+  win_shell: |
+    $NtpServers = "{{ win_var_ntp }}"
+    Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\W32Time\Parameters" -Name "NtpServer" -Value $NtpServers
+  when: win_var_ntp is defined and (win_var_ntp + '\r\n') != result_NTPServer.stdout
+
+- name: Check NTP VMProvider
+  win_shell:  (Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\W32Time\TimeProviders\VMICTimeProvider").Enabled
+  register: result_VMProvider
+  changed_when: False
+
+- name: Set NTP VMProvider to Disabled
+  win_shell: |
+    reg add HKLM\SYSTEM\CurrentControlSet\Services\W32Time\TimeProviders\VMICTimeProvider /v Enabled /t reg_dword /d 0 /f
+    Restart-Service w32time
+    Start-Sleep -s 5
+    w32tm /resync
+  when: result_VMProvider.stdout|int != 0
+  ignore_errors: true

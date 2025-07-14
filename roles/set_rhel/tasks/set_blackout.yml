@@ -1,0 +1,16 @@
+---
+- name: Check current file
+  ansible.builtin.shell: "grep -i '{{ rhel9_var_DisBlackout }}' /etc/default/grub"
+  register: command_result
+  when: rhel9_var_DisBlackout is defined
+  changed_when: false
+  failed_when: false  # パターンが見つからない場合でもタスクを失敗させないように設定
+  become: true
+
+- name: Set Consoleblank
+  ansible.builtin.shell: |
+    echo 'sudo sed -i.bak "/^GRUB_CMDLINE_LINUX=/ s/\"$/ consoleblank=0\"/" /etc/default/grub' | bash
+  when:
+    - rhel9_var_DisBlackout is defined
+    - command_result.rc != 0  # パターンが見つからない場合に実行
+  become: true

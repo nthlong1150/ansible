@@ -1,0 +1,36 @@
+---
+# Add your content here for add_group.yml
+# Example:
+# - name: Your task name
+#   your_module_name:
+#     your_parameter: value
+
+- name: Check DisplayLastLogonInfo
+  win_shell: (Get-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\System" -Name "DisplayLastLogonInfo").DisplayLastLogonInfo
+  register: result_LogonNotification
+  changed_when: False
+
+- name: Check EmitLILI
+  win_shell: (Get-ItemProperty -Path "HKLM:\Software\microsoft\windows\CurrentVersion\Policies\System\KDC\Parameters" -Name "EmitLILI").EmitLILI
+  register: result_EmitLILI
+  changed_when: False
+
+- name: Check CachedLogonsCount
+  win_shell: (Get-ItemProperty -Path "HKLM:\Software\microsoft\windows\CurrentVersion\Winlogon" -Name "CachedLogonsCount").CachedLogonsCount
+  register: result_CachedLogonsCount
+  changed_when: False
+
+- name: Set Logon Notification DisplayLastLogonInfo
+  win_shell: |
+    reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v DisplayLastLogonInfo /t REG_DWORD /d "{{ win_var_logonNotif_DisplayLastLogonInfo }}" /f
+  when: win_var_logonNotif_DisplayLastLogonInfo is defined and result_LogonNotification.stdout|int != win_var_logonNotif_DisplayLastLogonInfo
+
+- name: Set Logon Notification EmitLILI
+  win_shell: |
+    reg add "HKLM\Software\microsoft\windows\CurrentVersion\Policies\System\KDC\Parameters" -v EmitLILI /t REG_DWORD /d "{{ win_var_logonNotif_EmitLILI }}" /f
+  when: win_var_logonNotif_EmitLILI is defined and result_EmitLILI.stdout|int != win_var_logonNotif_EmitLILI
+
+- name: Set Logon Notification CachedLogonsCount
+  win_shell: |
+    reg add "HKLM\Software\microsoft\windows\CurrentVersion\Winlogon" /v CachedLogonsCount /t REG_DWORD /d "{{ win_var_logonNotif_CachedLogonsCount }}" /f
+  when: (win_var_logonNotif_CachedLogonsCount is defined and result_CachedLogonsCount.stdout|int != win_var_logonNotif_CachedLogonsCount) or result_CachedLogonsCount.stdout == ""

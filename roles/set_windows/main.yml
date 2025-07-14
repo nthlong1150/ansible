@@ -1,0 +1,35 @@
+---
+# Add your content here for main.yml
+# Example:
+# - name: Your task name
+#   your_module_name:
+#     your_parameter: value
+
+- name: Setup Windows
+  hosts: windows
+  tasks:
+    - include: tasks/set_computername.yml
+    - include: tasks/set_jpnenv.yml
+    - include: tasks/set_timezone.yml
+    - include: tasks/set_owner.yml
+    - include: tasks/set_workgroup.yml
+    - include: tasks/set_DisabledFirewall.yml
+    - include: tasks/set_logonNotif.yml
+    - include: tasks/set_defender.yml
+    - include: tasks/set_serviceDisabled.yml
+    - include: tasks/set_uac.yml
+    - include: tasks/set_dns.yml
+    - include: tasks/set_IPv6.yml
+    - include: tasks/set_ntp.yml
+    - include: tasks/set_hosts.yml
+    - include: tasks/set_accountpolicy.yml
+    - include: tasks/set_users_disabled.yml
+    - include: tasks/add_group.yml
+    - include: tasks/add_localuser.yml
+    - include: tasks/set_hosts.yml
+    - include: tasks/set_rdp.yml
+    - include: tasks/set_proxy.yml
+    - include: tasks/set_eventlog.yml
+    - include: tasks/set_install_feature.yml
+    - include: tasks/set_uninstall_feature.yml
+    - include: tasks/set_winupdate.yml

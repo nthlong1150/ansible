@@ -1,0 +1,13 @@
+---
+# Add your content here for set_dns.yml
+# Example:
+# - name: Your task name
+#   your_module_name:
+#     your_parameter: value
+
+ - name: Set DNS Server
+   win_dns_client:
+     adapter_names: "*"
+     state: present
+     dns_servers: "{{ win_var_dns }}"
+   when: win_var_dns is defined

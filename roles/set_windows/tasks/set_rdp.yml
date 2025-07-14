@@ -1,0 +1,40 @@
+---
+# Add your content here for set_rdp.yml
+# Example:
+# - name: Your task name
+#   your_module_name:
+#     your_parameter: value
+
+- name: Check RDP Enabled
+  win_shell: (Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server" -Name "fDenyTSConnections").fDenyTSConnections
+  register: result_fDenyTSConnections
+  changed_when: False
+
+- name: Set RDP Enalbed
+  win_shell: |
+    reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server" -v fDenyTSConnections /t REG_DWORD /d "0" /f
+  when: result_fDenyTSConnections.stdout|int != 0
+
+
+- name: Check RDP UserAuthentication
+  win_shell: |
+    (Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" -Name "UserAuthentication").UserAuthentication
+  register: result_UserAuthentication
+  changed_when: False
+
+- name: Set RDP UserAuthentication
+  win_shell: |
+    reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" -v UserAuthentication /t REG_DWORD /d "1" /f
+  when: result_UserAuthentication.stdout|int != 1
+
+
+- name: Check RDP Port
+  win_shell: |
+    (Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" -Name "PortNumber").PortNumber
+  register: result_PortNumber
+  changed_when: False
+
+- name: Set RDP Port
+  win_shell: |
+    reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" /v PortNumber /t REG_DWORD /d "{{ win_var_rdp_port }}" /f
+  when: win_var_rdp_port is defined and result_PortNumber.stdout|int != win_var_rdp_port

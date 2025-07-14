@@ -1,0 +1,9 @@
+---
+- name: Stop kdump
+  service:
+    name: "{{ item.name }}"
+    enabled: "{{ item.enabled }}"
+    state: "{{ item.state }}"
+  loop: "{{ rhel9_var_kdump }}"
+  when: rhel9_var_kdump is defined
+  become: true

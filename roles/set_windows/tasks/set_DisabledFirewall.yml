@@ -1,0 +1,13 @@
+---
+# Add your content here for set_firewall.yml
+# Example:
+# - name: Your task name
+#   your_module_name:
+#     your_parameter: value
+
+- name: Set Firewall to Disabled
+  community.windows.win_firewall:
+    state: Disabled
+    profiles: "{{ item }}"
+  loop: "{{ win_var_disabledFirewall }}"
+  when: win_var_disabledFirewall is defined

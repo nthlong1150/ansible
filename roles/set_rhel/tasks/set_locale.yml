@@ -1,0 +1,41 @@
+---
+- name: Check locale
+  ansible.builtin.shell: "localectl status | grep '{{ rhel9_var_locale }}'"
+  register: command_result
+  changed_when: false
+  failed_when: false  # パターンが見つからない場合でもタスクを失敗させないように設定
+  when: rhel9_var_locale is defined
+  become: true
+
+- name: Check keymap
+  ansible.builtin.shell: "localectl status | grep -x '.*VC Keymap: {{ rhel9_var_keymap }}'"
+  register: command_result2
+  changed_when: false
+  failed_when: false  # パターンが見つからない場合でもタスクを失敗させないように設定
+  when: rhel9_var_keymap is defined
+  become: true
+
+- name: Yum Install Langpack-ja
+  ansible.builtin.yum:
+    name: 
+      - glibc-langpack-ja
+      - kbd-legacy
+    state: latest
+  when: rhel9_var_locale is defined
+  become: yes
+  become_user: root
+
+- name: Set locale
+  ansible.builtin.shell: "localectl set-locale '{{ rhel9_var_locale }}'"
+  when:
+    - rhel9_var_locale is defined
+    - command_result.rc != 0  # パターンが見つからない場合に実行
+  become: true
+
+- name: Set keymap
+  ansible.builtin.shell: "localectl set-keymap '{{ rhel9_var_keymap }}'"
+  when:
+    - rhel9_var_keymap is defined
+    - command_result2.rc != 0  # パターンが見つからない場合に実行
+  become: true
+

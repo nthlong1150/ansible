@@ -1,0 +1,21 @@
+---
+
+- name: Check RegisteredOrganization
+  win_shell: ((reg query "HKLM\Software\Microsoft\Windows NT\CurrentVersion" /v RegisteredOrganization ) | select-string "{{ win_var_organization }}").count
+  register: result_RegisteredOrganization
+  changed_when: False
+  when: win_var_organization is defined
+
+- name: Set RegisteredOrganization
+  win_shell: reg add "HKLM\Software\Microsoft\Windows NT\CurrentVersion" /v RegisteredOrganization /d "{{ win_var_organization }}" /f
+  when: win_var_organization is defined and result_RegisteredOrganization.stdout|int !=1
+
+- name: Check RegisteredOwner
+  win_shell: ((reg query "HKLM\Software\Microsoft\Windows NT\CurrentVersion" /v RegisteredOwner ) | select-string "{{ win_var_owner }}").count
+  register: result_RegisteredOwner
+  changed_when: False
+  when: win_var_organization is defined
+
+- name: Set RegisteredOwner
+  win_shell: reg add "HKLM\Software\Microsoft\Windows NT\CurrentVersion" /v RegisteredOwner /d "{{ win_var_owner }}" /f
+  when: win_var_owner is defined and result_RegisteredOwner.stdout|int !=1

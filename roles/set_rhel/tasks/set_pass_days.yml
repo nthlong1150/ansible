@@ -1,0 +1,46 @@
+- name: Check sshd_config_MAX
+  ansible.builtin.shell:
+    grep -x "{{ rhel9_var_PassMaxDays }}" /etc/login.defs
+  register: command_result
+  changed_when: false
+  when: rhel9_var_PassMaxDays is defined
+  failed_when: 
+    - command_result.rc != 0 and command_result.rc != 1
+  become: true
+
+- name: Check sshd_config_MIN
+  ansible.builtin.shell:
+    grep -x "{{ rhel9_var_PassMinDays }}" /etc/login.defs
+  register: command_result2
+  changed_when: false
+  when: rhel9_var_PassMinDays is defined
+  failed_when: 
+    - command_result2.rc != 0 and command_result2.rc != 1
+  become: true
+
+- name: Bkup sshd_config
+  ansible.builtin.shell:
+    cp /etc/login.defs /tmp/login.defs.org
+  register: command_result3
+  changed_when: false
+  when: rhel9_var_PassMaxDays is defined
+    or rhel9_var_PassMinDays is defined
+  become: true
+
+- name: Set MAXDAYS
+  ansible.builtin.shell:
+    sed -i -e "s/^PASS_MAX_DAYS.*/{{ rhel9_var_PassMaxDays }}/" /etc/login.defs
+  when: 
+    - rhel9_var_PassMaxDays is defined
+    - command_result.rc == 1
+    - not command_result3.rc
+  become: true
+
+- name: Set MINDAYS
+  ansible.builtin.shell:
+    sed -i -e "s/^PASS_MIN_DAYS.*/{{ rhel9_var_PassMinDays }}/" /etc/login.defs
+  when:
+    - rhel9_var_PassMinDays is defined
+    - command_result2.rc == 1
+    - not command_result3.rc
+  become: true

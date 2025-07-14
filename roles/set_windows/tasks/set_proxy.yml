@@ -1,0 +1,27 @@
+---
+# Add your content here for set_proxy.yml
+# Example:
+# - name: Your task name
+#   your_module_name:
+#     your_parameter: value
+
+- name: Set Proxy
+  community.windows.win_inet_proxy:
+    auto_detect: false
+    proxy: "{{ item.proxy_server  }}"
+    bypass: "{{ item.bypass }}"
+  loop: "{{ win_var_proxy }}"
+  when: win_var_proxy is defined
+
+- name: Import IE proxy
+  win_http_proxy:
+    source: ie
+  when: win_var_proxy is defined and win_var_importIE is defined and win_var_importIE == 1
+
+- name: Set no_proxy
+  win_environment:
+    name: "no_proxy"
+    value: "{{ win_var_noproxy }}"
+    state: present
+    level: machine
+  when: win_var_proxy is defined and win_var_noproxy is defined

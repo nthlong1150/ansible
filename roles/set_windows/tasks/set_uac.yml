@@ -1,0 +1,15 @@
+---
+# Add your content here for set_uac.yml
+# Example:
+# - name: Your task name
+#   your_module_name:
+#     your_parameter: value
+
+- name: Check UserAccountControl
+  win_shell: (Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "EnableLUA").EnableLUA
+  register: result_UserAccountControl
+  changed_when: False
+
+- name: Set UserAccountControl
+  win_shell: reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "EnableLUA" /t REG_DWORD /d "{{ win_var_uac }}" /f
+  when: win_var_uac is defined and not win_var_uac and result_UserAccountControl.stdout|int != win_var_uac

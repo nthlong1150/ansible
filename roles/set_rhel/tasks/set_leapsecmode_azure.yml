@@ -1,0 +1,24 @@
+---
+- name: Check chronyc sources
+  ansible.builtin.shell:
+    chronyc sources | grep "^#\* PHC0"
+  register: command_result
+  changed_when: false
+  failed_when: false
+- name: Check leapsecmode
+  ansible.builtin.shell:
+    cat /etc/chrony.conf | grep -x "{{ rhel9_var_leapsecmode }}"
+  register: command_result2
+  changed_when: false
+  failed_when: false
+  when: 
+    - rhel9_var_leapsecmode is defined
+    - command_result.rc
+- name: Set leapsecmode sew
+  ansible.builtin.shell:
+    sed -i -e "s/#{{ rhel9_var_leapsecmode }}/{{ rhel9_var_leapsecmode }}/" /etc/chrony.conf
+  when: 
+    - rhel9_var_leapsecmode is defined
+    - command_result.rc
+    - command_result2.rc
+  become: true

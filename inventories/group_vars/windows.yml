@@ -1,0 +1,46 @@
+---
+# カレントユーザのロケーション（リージョン）設定
+# 122:日本
+win_var_location: 122
+
+# 言語フォーマット
+win_var_format: ja-JP
+
+# Unicodeランゲージフォーマット（他の指定がない場合のデフォルト値設定）
+win_var_unicode_language: ja-JP
+
+# 日本語キーボード設定
+# yes: キーボード日本語　no: 変更なし（英字キーボード）
+win_var_jp_keyboard: "yes"
+
+# IME入力言語
+# 0411:00000411：日本語
+win_var_DefaultInputMethod: "0411:00000411"
+
+# 表示言語・地域設定
+# 17: 日本語 ※LCID
+win_var_WinUILanguageOverride: 17
+
+# インタフェースのIPv6設定
+# enabled:有効 disabled:無効
+win_var_ipv6: disabled
+
+# ファイアウォールを無効化するプロファイルの指定（デフォルト全プロファイル有効）
+win_var_disabledFirewall:
+  - Domain
+  - Private
+  - Public
+
+# Windows Defender
+# 0: ActiveMode 1: PassiveMode
+win_var_defender: 1
+
+# ログイン履歴表示有効（未設定でデフォルト無効）
+win_var_logonNotif_DisplayLastLogonInfo: 1
+
+# 以前のログイン情報を提供する（未設定でデフォルト無効）
+win_var_logonNotif_EmitLILI: 1
+
+# ログイン情報のキャッシュ
+# 0：キャッシュを無効　未設定でデフォルト（10）
+win_var_logonNotif_CachedLogonsCount: 0

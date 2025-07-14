@@ -1,0 +1,10 @@
+---
+
+- name: Stop smartd
+  service:
+    name: "{{ item.name }}"
+    enabled: "{{ item.enabled }}"
+    state: "{{ item.state }}"
+  loop: "{{ rhel9_var_smartd }}"
+  when: rhel9_var_smartd is defined
+  become: true

@@ -1,0 +1,24 @@
+- name: Check if SSH port is already set in sshd_config
+  ansible.builtin.shell: "grep -q -x 'Port {{ rhel9_var_sshPort }}' /etc/ssh/sshd_config"
+  register: grep_result
+  changed_when: false
+  failed_when: false  # パターンが見つからない場合でも失敗しないように設定
+  become: true
+  when: rhel9_var_sshPort is defined
+
+- name: Backup sshd_config if SSH port is not set
+  ansible.builtin.shell: "cp /etc/ssh/sshd_config /tmp/sshd_config.org"
+  register: command_result_backup
+  when:
+    - rhel9_var_sshPort is defined
+    - grep_result.rc != 0  # パターンが見つからない場合に実行
+  become: true
+
+- name: Set SSH Port in sshd_config if not already set
+  ansible.builtin.shell: "sed -i -e '/^#Port/s/^#//' -e 's/^Port.*/{{ rhel9_var_sshPort }}/' /etc/ssh/sshd_config"
+  when:
+    - rhel9_var_sshPort is defined
+    - grep_result.rc != 0  # パターンが見つからない場合に実行
+    - command_result_backup.rc == 0  # バックアップが成功している場合に実行
+  become: true
+

@@ -1,0 +1,6 @@
+---
+- name: Set hostname
+  ansible.builtin.hostname:
+    name: "{{ rhel9_var_hostname }}"
+  when: rhel9_var_hostname is defined
+  become: true

@@ -1,0 +1,27 @@
+---
+- name: Check masked
+  ansible.builtin.shell: "systemctl status ctrl-alt-del.target | grep '{{ rhel9_var_DisCtrlAltDel }}'"
+  register: command_result
+  when: rhel9_var_DisCtrlAltDel is defined
+  changed_when: false
+  failed_when: false  # パターンが見つからない場合でもタスクを失敗させないように設定
+  become: true
+
+- name: Stop CtrlAltDel
+  ansible.builtin.service:
+    name: ctrl-alt-del.target
+    enabled: no
+    state: stopped
+  register: command_result2
+  when:
+    - rhel9_var_DisCtrlAltDel is defined
+    - command_result.rc != 0  # パターンが見つからない場合に実行
+  become: true
+
+- name: Mask CtrlAltDel
+  ansible.builtin.shell: "systemctl mask ctrl-alt-del.target"
+  when:
+    - rhel9_var_DisCtrlAltDel is defined
+    - command_result.rc != 0  # パターンが見つからない場合に実行
+    - not command_result2.failed  # Stop CtrlAltDel タスクが失敗していない場合に実行
+  become: true

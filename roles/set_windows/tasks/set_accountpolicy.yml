@@ -1,0 +1,138 @@
+---
+# Add your content here for set_accountpolicy.yml
+# Example:
+# - name: Your task name
+#   your_module_name:
+#     your_parameter: value
+
+- name: check AccountPolicy_minpwlen
+  win_shell: net accounts
+  register: result_minpwlen_raw
+  changed_when: False
+
+- name: extract minpwlen value
+  set_fact:
+    result_minpwlen: "{{ result_minpwlen_raw.stdout_lines[3].split(':')[1] | replace(' ', '') }}"
+
+- name: Set AccountPolicy_minpwlen
+  win_shell: net accounts /minpwlen:{{ win_var_passwordPolicy.minpwlen }}
+  when: win_var_passwordPolicy.minpwlen is defined and result_minpwlen|int != win_var_passwordPolicy.minpwlen
+
+
+- name: check AccountPolicy_maxpwage
+  win_shell: net accounts
+  register: result_maxpwage_raw
+  changed_when: False
+
+- name: extract maxpwage value
+  set_fact:
+    result_maxpwage: "{{ result_maxpwage_raw.stdout_lines[2].split(':')[1] | replace(' ', '') }}"
+
+- name: Set AccountPolicy_maxpwage
+  win_shell: net accounts /maxpwage:{{ win_var_passwordPolicy.maxpwage }}
+  when: win_var_passwordPolicy.maxpwage is defined and result_maxpwage|int != win_var_passwordPolicy.maxpwage
+
+
+- name: check AccountPolicy_minpwage
+  win_shell: net accounts
+  register: result_minpwage_raw
+  changed_when: False
+
+- name: extract minpwage value
+  set_fact:
+    result_minpwage: "{{ result_minpwage_raw.stdout_lines[1].split(':')[1] | replace(' ', '') }}"
+
+- name: Set AccountPolicy_minpwage
+  win_shell: net accounts /minpwage:{{ win_var_passwordPolicy.minpwage }}
+  when: win_var_passwordPolicy.minpwage is defined and result_minpwage|int != win_var_passwordPolicy.minpwage
+
+
+- name: check AccountPolicy_uniquepw
+  win_shell: net accounts
+  register: result_uniquepw_raw
+  changed_when: False
+
+- name: extract uniquepw value
+  set_fact:
+    result_uniquepw: "{{ result_uniquepw_raw.stdout_lines[4].split(':')[1] | replace(' ', '') }}"
+
+- name: Set AccountPolicy_uniquepw
+  win_shell: net accounts /uniquepw:{{ win_var_passwordPolicy.uniquepw }}
+  when: win_var_passwordPolicy.uniquepw is defined and result_uniquepw|int != win_var_passwordPolicy.uniquepw
+
+
+- name: check AccountPolicy_LOCKOUTTHRESHOLD
+  win_shell: net accounts
+  register: result_LOCKOUTTHRESHOLD_raw
+  changed_when: False
+
+- name: extract LOCKOUTTHRESHOLD value
+  set_fact:
+    result_LOCKOUTTHRESHOLD: "{{ result_LOCKOUTTHRESHOLD_raw.stdout_lines[5].split(':')[1] | replace(' ', '') }}"
+
+- name: Set AccountPolicy_LOCKOUTTHRESHOLD
+  win_shell: net accounts /LOCKOUTTHRESHOLD:{{ win_var_passwordPolicy.LOCKOUTTHRESHOLD }}
+  when: win_var_passwordPolicy.LOCKOUTTHRESHOLD is defined and result_LOCKOUTTHRESHOLD|int != win_var_passwordPolicy.LOCKOUTTHRESHOLD
+
+
+- name: check AccountPolicy_LOCKOUTDURATION
+  win_shell: net accounts
+  register: result_LOCKOUTDURATION_raw
+  changed_when: False
+
+- name: extract LOCKOUTDURATION value
+  set_fact:
+    result_LOCKOUTDURATION: "{{ result_LOCKOUTDURATION_raw.stdout_lines[6].split(':')[1] | replace(' ', '') }}"
+
+- name: Set AccountPolicy_LOCKOUTDURATION
+  win_shell: net accounts /LOCKOUTDURATION:{{ win_var_passwordPolicy.LOCKOUTDURATION }}
+  when: win_var_passwordPolicy.LOCKOUTDURATION is defined and result_LOCKOUTDURATION|int != win_var_passwordPolicy.LOCKOUTDURATION
+
+
+- name: check AccountPolicy_LOCKOUTWINDOW
+  win_shell: net accounts
+  register: result_LOCKOUTWINDOW_raw
+  changed_when: False
+
+- name: extract LOCKOUTWINDOW value
+  set_fact:
+    result_LOCKOUTWINDOW: "{{ result_LOCKOUTWINDOW_raw.stdout_lines[7].split(':')[1] | replace(' ', '') }}"
+
+- name: Set AccountPolicy_LOCKOUTWINDOW
+  win_shell: net accounts /LOCKOUTWINDOW:{{ win_var_passwordPolicy.LOCKOUTWINDOW }}
+  when: win_var_passwordPolicy.LOCKOUTWINDOW is defined and result_LOCKOUTWINDOW|int != win_var_passwordPolicy.LOCKOUTWINDOW
+
+- name: Check AccountPolicy_ClearTextPassword
+  win_shell: |
+    secedit /export /areas securitypolicy /cfg secpol.inf ; Get-Content .\secpol.inf
+  register: result_ClearTextPassword_raw
+  changed_when: False
+
+- name: extract ClearTextPassword value
+  set_fact:
+    result_ClearTextPassword: "{{ result_ClearTextPassword_raw.stdout_lines | select('match', '^ClearTextPassword') | map('split', '=') | map('last') | first | regex_replace(' ', '') }}"
+
+- name: Set AccountPolicy_ClearTextPassword
+  win_shell: |
+    secedit /export /areas securitypolicy /cfg secpol.inf
+    (Get-Content .\secpol.inf) | foreach{$_ -replace "ClearTextPassword = \d","ClearTextPassword = {{ win_var_passwordPolicy.ClearTextPassword }}"} | Set-Content .\secpol.inf
+    secedit /configure /db secpol.db /cfg .\secpol.inf
+  when: win_var_passwordPolicy.ClearTextPassword is defined and win_var_passwordPolicy.ClearTextPassword != result_ClearTextPassword|int
+
+
+- name: Check AccountPolicy_PasswordComplexity
+  win_shell: |
+    secedit /export /areas securitypolicy /cfg secpol.inf ; Get-Content .\secpol.inf
+  register: result_PasswordComplexity_raw
+  changed_when: False
+
+- name: extract PasswordComplexity value
+  set_fact:
+    result_PasswordComplexity: "{{ result_PasswordComplexity_raw.stdout_lines | select('match', '^PasswordComplexity') | map('split', '=') | map('last') | first | regex_replace(' ', '') }}"
+
+- name: Set AccountPolicy_PasswordComplexity
+  win_shell: |
+    secedit /export /areas securitypolicy /cfg secpol.inf
+    (Get-Content .\secpol.inf) | foreach{$_ -replace "PasswordComplexity = \d","PasswordComplexity = {{ win_var_passwordPolicy.PasswordComplexity }}"} | Set-Content .\secpol.inf
+    secedit /configure /db secpol.db /cfg .\secpol.inf
+  when: win_var_passwordPolicy.PasswordComplexity is defined and win_var_passwordPolicy.PasswordComplexity != result_PasswordComplexity|int

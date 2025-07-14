@@ -1,0 +1,13 @@
+---
+# Add your content here for set_feature.yml
+# Example:
+# - name: Your task name
+#   your_module_name:
+#     your_parameter: value
+
+- name: Set Install Windows Feature
+  ansible.windows.win_feature:
+    name: "{{ item }}"
+    state: absent
+  loop: "{{ win_var_feature_uninstall }}"
+  when: win_var_feature_uninstall is defined

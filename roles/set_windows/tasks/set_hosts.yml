@@ -1,0 +1,14 @@
+---
+# Add your content here for add_group.yml
+# Example:
+# - name: Your task name
+#   your_module_name:
+#     your_parameter: value
+
+- name: Set Hosts
+  community.windows.win_hosts:
+    canonical_name: "{{ item.canonical_name }}"
+    ip_address: "{{ item.ip_address }}"
+    state: "{{ item.state }}"
+  loop: "{{ win_var_hosts }}"
+  when: win_var_hosts is defined

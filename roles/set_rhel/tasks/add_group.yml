@@ -1,0 +1,9 @@
+---
+- name: Add Group
+  ansible.builtin.group:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+    gid: "{{ item.gid }}"
+  loop: "{{ rhel9_var_groups }}"
+  when: rhel9_var_groups is defined
+  become: true

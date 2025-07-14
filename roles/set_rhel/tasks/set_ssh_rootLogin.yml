@@ -1,0 +1,55 @@
+- name: Check PermitRootLogin
+  ansible.builtin.shell:
+    cmd: "grep -E '^{{ rhel9_var_PermitRootLogin }}' /etc/ssh/sshd_config" 
+  changed_when: false
+  register: command_result
+  failed_when: false  # パターンが見つからない場合でもタスクを失敗させない
+  when: rhel9_var_PermitRootLogin is defined
+  become: true
+
+- name: Check PasswordAuthentication
+  ansible.builtin.shell:
+    cmd: "grep -E '^{{ rhel9_var_PassAuth }}' /etc/ssh/sshd_config"
+  changed_when: false
+  register: command_result2
+  failed_when: false  # パターンが見つからない場合でもタスクを失敗させない
+  when: rhel9_var_PassAuth is defined
+  become: true
+
+- name: Bkup sshd_config
+  ansible.builtin.shell:
+    cmd: "cp /etc/ssh/sshd_config /tmp/sshd_config.org"
+  changed_when: false
+  register: command_result3
+  when: rhel9_var_PermitRootLogin is defined or rhel9_var_PassAuth is defined
+  failed_when: false  # 定義されていない変数の場合もタスクを失敗させない
+  become: true
+
+- name: Uncomment PermitRootLogin line in sshd_config
+  ansible.builtin.shell:
+    cmd: "sed -i -e '/^#PermitRootLogin/s/^#//' /etc/ssh/sshd_config"
+  when:
+    - rhel9_var_PermitRootLogin is defined
+    - command_result.rc != 0
+    - command_result3.rc == 0
+  become: true
+
+- name: Replace PermitRootLogin line in sshd_config
+  ansible.builtin.shell:
+    cmd: "sed -i -e 's/^PermitRootLogin.*/{{ rhel9_var_PermitRootLogin }}/' /etc/ssh/sshd_config"
+  when:
+    - rhel9_var_PermitRootLogin is defined
+    - command_result.rc != 0
+    - command_result3.rc == 0
+  become: true
+
+
+- name: Set PasswordAuthentication
+  ansible.builtin.shell:
+    cmd: |
+      sed -i -e '/^PasswordAuthentication no/s/.*/{{ rhel9_var_PassAuth }}/' \
+             -e '/^#PasswordAuthentication yes/s/.*/{{ rhel9_var_PassAuth }}/' \
+             /etc/ssh/sshd_config
+  when: rhel9_var_PassAuth is defined and command_result2.rc != 0 and command_result3.rc == 0
+  become: true
+

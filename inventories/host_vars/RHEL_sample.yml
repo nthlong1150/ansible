@@ -1,0 +1,76 @@
+---
+# ホスト名
+rhel9_var_hostname: AwsTestRHEL94
+
+#タイムゾーン
+rhel9_var_timezone: Asia/Tokyo
+
+#Selinux
+rhel9_var_selinux:
+- {  policy: "targeted", state: "disabled" }
+
+#起動ランレベル
+rhel9_var_runlevel: "graphical.target"
+
+# hosts設定
+rhel_var_hosts:
+  - { canonical_name: test6, ip_address: 10.1.1.1, state: present}
+  - { canonical_name: test7, ip_address: 10.1.1.2, state: present}
+  - { canonical_name: test8, ip_address: 10.1.1.3, state: present}
+  - { canonical_name: test9, ip_address: 10.1.1.4, state: present}
+  - { canonical_name: test10, ip_address: 10.1.1.5, state: present}
+
+
+
+
+
+
+#ユーザー追加
+rhel9_var_user:
+  - { name: "testuser", group: "testgrp", groups: "testgrp6", uid: "1011", password: "PassMuro123!", state: "present"}
+  - { name: "testuser2", group: "testgrp2", groups: "testgrp6", uid: "1012", password: "PassMuro123!", state: "present"}
+  - { name: "testuser3", group: "testgrp3", groups: "testgrp6", uid: "1013", password: "PassMuro123!", state: "present"}
+  - { name: "testuser4", group: "testgrp4", groups: "testgrp6,testgrp7", uid: "1014", password: "PassMuro123!", state: "present"}
+  - { name: "testuser5", group: "testgrp5", groups: "testgrp6,testgrp7", uid: "1015", password: "PassMuro123!", state: "present"}
+
+
+
+
+
+
+#グループ追加
+rhel9_var_groups:
+  - { name: "testgrp", state: "present", gid: 1011 }
+  - { name: "testgrp2", state: "present", gid: 1012 }
+  - { name: "testgrp3", state: "present", gid: 1013 }
+  - { name: "testgrp4", state: "present", gid: 1014 }
+  - { name: "testgrp5", state: "present", gid: 1015 }
+  - { name: "testgrp6", state: "present", gid: 1016 }
+  - { name: "testgrp7", state: "present", gid: 1017 }
+
+
+
+
+#NTPサーバ （テンプレートファイル配置場所） ※現在未実装
+
+
+#パスワード厳密化（テンプレートファイル配置場所）
+rhel9_var_systemauth: "/opt/ansible/roles/set_rhel/template/system-auth"
+rhel9_var_passwordauth: "/opt/ansible/roles/set_rhel/template/password-auth"
+
+#sshルートログイン無効化
+rhel9_var_PermitRootLogin: PermitRootLogin yes
+
+#パスワード有効期限
+rhel9_var_PassMaxDays: PASS_MAX_DAYS 100
+
+#proxy
+PROXYSERVER: "1.1.1.1"
+PORT: "22"
+PROXY_URL: "http://1.1.1.1:22"
+no_proxy_URL: "HTTP_PROXY=http://1.1.1.1:22"
+rhel9_var_HTTP_PROXY: "HTTP_PROXY=http://1.1.1.1:22"
+rhel9_var_HTTPS_PROXY: "HTTPS_PROXY=http://1.1.1.1:22"
+rhel9_var_http_proxy: "http_proxy=http://1.1.1.1:22"
+rhel9_var_https_proxy: "https_proxy=http://1.1.1.1:22"
+rhel9_var_no_proxy: "no_proxy=rhui.ap-northeast-1.aws.ce.redhat.com,169.254.169.254,localhost,127.0.0.1,::1"

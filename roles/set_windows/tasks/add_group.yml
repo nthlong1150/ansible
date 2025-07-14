@@ -1,0 +1,13 @@
+---
+# Add your content here for add_group.yml
+# Example:
+# - name: Your task name
+#   your_module_name:
+#     your_parameter: value
+
+- name: Add Group
+  ansible.windows.win_group:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ win_var_groups }}"
+  when: win_var_groups is defined

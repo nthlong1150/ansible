@@ -1,0 +1,22 @@
+all:
+  hosts:
+    ### 以下に管理対象ノードを追記する
+    ### ansible_host:
+    ### ansible_host: IPアドレスを指定
+    ### ansible_password: azureuserのパスワードを指定
+    #################################################
+    AzuXXXXXXXX:
+      ansible_host: xxx.xxx.xxx.xxx
+      ansible_password: PASSWORD
+    #################################################
+  children:
+    windows:
+      vars:
+        ansible_user: azureuser
+        ansible_port: 5985
+        ansible_winrm_transport: ntlm
+        ansible_connection: winrm
+        ansible_winrm_server_cert_validation: ignore
+      hosts:
+        ### 以下に管理対象ノードを追記する（ホスト名のみ）
+        AzuXXXXXXXX:

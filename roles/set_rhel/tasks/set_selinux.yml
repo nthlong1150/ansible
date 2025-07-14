@@ -1,0 +1,28 @@
+---
+- name: Stop selinux
+  selinux:
+    policy: "{{ item.policy }}"
+    state: "{{ item.state }}"
+  loop: "{{ rhel9_var_selinux }}"
+  register: command_result
+  when: rhel9_var_selinux is defined
+  become: true
+- name: Message(start reboot)
+  debug:
+    msg: "再起動を実施します。"
+  when: 
+    - rhel9_var_selinux is defined
+    - command_result.changed != false
+- name: Reboot
+  reboot:
+    post_reboot_delay: 60
+  when: 
+    - rhel9_var_selinux is defined
+    - command_result.changed != false
+  become: true
+- name: Message(finish reboot)
+  debug:
+    msg: "再起動を完了しました。"
+  when:
+    - rhel9_var_selinux is defined
+    - command_result.changed != false

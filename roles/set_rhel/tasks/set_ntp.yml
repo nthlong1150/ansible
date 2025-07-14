@@ -1,0 +1,38 @@
+---
+- name: File transfer
+  template:
+    src: "{{ rhel9_var_NTP }}"
+    dest: /opt/ansible/roles/set_rhel/template/chrony.conf
+    mode: "0644"
+    owner: root
+    group: root
+  register: command_result
+  changed_when: false
+  when: rhel9_var_NTP is defined
+  become: true
+- name: Diff
+  ansible.builtin.shell:
+    diff /opt/ansible/roles/set_rhel/template/chrony.conf /etc/chrony.conf
+  register: command_result2
+  changed_when: false
+  when: 
+    - rhel9_var_NTP is defined
+    - not command_result.failed
+  ignore_errors: true
+- name: Bkup chrony.conf
+  ansible.builtin.shell:
+    cp /etc/chrony.conf /opt/ansible/roles/set_rhel/template/chrony_bk.conf
+  when: 
+    - rhel9_var_NTP is defined
+    - not command_result.failed
+    - command_result2.rc
+  register: command_result3
+- name: Set File
+  ansible.builtin.shell:
+    mv /opt/ansible/roles/set_rhel/template/chrony.conf /etc/chrony.conf
+  when: 
+    - rhel9_var_NTP is defined
+    - not command_result.failed
+    - command_result2.rc
+    - not command_result3.rc
+  become: true

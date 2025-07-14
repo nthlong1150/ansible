@@ -1,0 +1,14 @@
+---
+# Add your content here for set_workgroup.yml
+# Example:
+# - name: Your task name
+#   your_module_name:
+#     your_parameter: value
+
+- name: Set workgroup
+  win_domain_membership:
+    workgroup_name: "{{ win_var_workgroup }}"
+    domain_admin_user: dummy
+    domain_admin_password: dummy
+    state: workgroup
+  when: win_var_workgroup is defined

@@ -1,0 +1,15 @@
+---
+# Add your content here for set_eventlog.yml
+# Example:
+# - name: Your task name
+#   your_module_name:
+#     your_parameter: value
+
+- name: Set eventlog
+  community.windows.win_eventlog:
+    name: "{{ item.name }}"
+    maximum_size: "{{ item.maximum_size }}"
+    overflow_action: "{{ item.overflow_action }}"
+    state: "{{ item.state }}"
+  loop: "{{ win_var_eventlog }}"
+  when: win_var_eventlog is defined

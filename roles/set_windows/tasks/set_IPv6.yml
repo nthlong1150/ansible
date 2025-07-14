@@ -1,0 +1,14 @@
+---
+# Add your content here for set_firewall.yml
+# Example:
+# - name: Your task name
+#   your_module_name:
+#     your_parameter: value
+
+- name: Set IPv6
+  community.windows.win_net_adapter_feature:
+    interface: '*'
+    state: "{{ win_var_ipv6 }}"
+    component_id:
+    - ms_tcpip6
+  when: win_var_ipv6 is defined

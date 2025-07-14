@@ -1,0 +1,24 @@
+---
+# Add your content here for set_nic.yml
+# Example:
+# - name: Your task name
+#   your_module_name:
+#     your_parameter: value
+
+- name: Set WindowsUpdate AUOptions
+  win_regedit:
+    path: "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsUpdate\\AU"
+    name: "AUOptions"
+    data: "{{ win_var_winupdate.AUOptions }}"
+    type: dword
+    state: present
+  when: win_var_winupdate is defined
+
+- name: Set WindowsUpdate NoAutoUpdate
+  win_regedit:
+    path: "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsUpdate\\AU"
+    name: "NoAutoUpdate"
+    data: "{{ win_var_winupdate.NoAutoUpdate }}"
+    type: dword
+    state: present
+  when: win_var_winupdate is defined

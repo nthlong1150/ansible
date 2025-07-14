@@ -1,0 +1,16 @@
+---
+# Add your content here for add_group.yml
+# Example:
+# - name: Your task name
+#   your_module_name:
+#     your_parameter: value
+
+- name: Add LocalUser
+  ansible.windows.win_user:
+    name: "{{ item.name }}"
+    password: "{{ item.password }}"
+    state: "{{ item.state }}"
+    password_never_expires: "{{ item.password_never_expires }}"
+    groups: "{{ item.groups }}"
+  loop: "{{ win_var_user }}"
+  when: win_var_user is defined

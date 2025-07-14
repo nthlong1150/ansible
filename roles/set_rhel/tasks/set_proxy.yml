@@ -1,0 +1,79 @@
+---
+- name: Check proxy.sh
+  ansible.builtin.shell:
+    ls /etc/profile.d | grep "proxy.sh"
+  register: command_result
+  changed_when: false
+  failed_when: false
+- name: Bkup proxy.sh
+  ansible.builtin.shell:
+    cp -p /etc/profile.d/proxy.sh /etc/profile.d/proxy`date +%Y%m%d%H%M`.sh
+  register: command_result2
+  changed_when: false
+  failed_when: false
+  when: command_result.rc
+- name: Clear proxy.sh
+  ansible.builtin.shell:
+    cp -p /dev/null /etc/profile.d/proxy.sh
+  changed_when: false
+  failed_when: false
+- name: Set PROXY_URL
+  ansible.builtin.shell:
+    echo "PROXY_URL="{{ PROXY_URL }} > /etc/profile.d/proxy.sh;
+  when: PROXY_URL is defined
+  become: true
+- name: Set NO_PROXY_URL
+  ansible.builtin.shell:
+    echo "no_proxy_URL="{{ no_proxy_URL }} >> /etc/profile.d/proxy.sh;
+  when: no_proxy_URL is defined
+  become: true
+- name: Set indentation
+  ansible.builtin.shell:
+    echo >> /etc/profile.d/proxy.sh;
+  when: PROXY_URL is defined
+    or NO_PROXY_URL is defined
+  become: true
+- name: Set proxy.sh1
+  ansible.builtin.shell:
+    echo "HTTP_PROXY=\${PROXY_URL}" >> /etc/profile.d/proxy.sh;
+  when: rhel9_var_HTTP_PROXY is defined
+  become: true
+- name: Set proxy.sh2
+  ansible.builtin.shell:
+    echo "HTTPS_PROXY=\${PROXY_URL}" >> /etc/profile.d/proxy.sh;
+  when: rhel9_var_HTTPS_PROXY is defined
+  become: true
+- name: Set proxy.sh3
+  ansible.builtin.shell:
+    echo "http_proxy=\${PROXY_URL}" >> /etc/profile.d/proxy.sh;
+  when: rhel9_var_http_proxy is defined
+  become: true
+- name: Set proxy.sh4
+  ansible.builtin.shell:
+    echo "https_proxy=\${PROXY_URL}" >> /etc/profile.d/proxy.sh;
+  when: rhel9_var_https_proxy is defined
+  become: true
+- name: Set proxy.sh5
+  ansible.builtin.shell:
+    echo "no_proxy=\${no_proxy_URL}" >> /etc/profile.d/proxy.sh;
+  when: rhel9_var_no_proxy is defined
+  become: true
+- name: Set proxy.sh6
+  ansible.builtin.shell:
+    echo >> /etc/profile.d/proxy.sh;
+    echo "export HTTP_PROXY HTTPS_PROXY FTP_PROXY http_proxy https_proxy no_proxy" >> /etc/profile.d/proxy.sh
+  register: command_result3
+  when: rhel9_var_HTTP_PROXY is defined
+    or rhel9_var_HTTPS_PROXY is defined
+    or rhel9_var_http_proxy is defined
+    or rhel9_var_https_proxy is defined
+    or rhel9_var_no_proxy is defined
+  become: true
+- name: Set proxy.sh7
+  ansible.builtin.shell:
+    source /etc/profile.d/proxy.sh
+  when: rhel9_var_HTTP_PROXY is defined
+    or rhel9_var_HTTPS_PROXY is defined
+    or rhel9_var_http_proxy is defined
+    or rhel9_var_https_proxy is defined
+    or rhel9_var_no_proxy is defined

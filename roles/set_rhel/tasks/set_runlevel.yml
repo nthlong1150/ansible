@@ -1,0 +1,13 @@
+- name: Check current runlevel
+  ansible.builtin.shell:
+    cmd: systemctl get-default
+  register: command_result
+  changed_when: false
+  failed_when: command_result.rc is defined and command_result.rc != 0
+  when: rhel9_var_runlevel is defined
+
+- name: Set default runlevel
+  ansible.builtin.command: sudo systemctl set-default "{{ rhel9_var_runlevel }}"
+  when: 
+    - rhel9_var_runlevel is defined
+    - rhel9_var_runlevel != command_result.stdout

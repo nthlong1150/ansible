@@ -1,0 +1,6 @@
+---
+- name: Set timezone
+  timezone:
+    name: "{{ rhel9_var_timezone }}"
+  when: rhel9_var_timezone is defined
+  become: true

@@ -1,0 +1,38 @@
+
+---
+#locale
+rhel9_var_locale: "ja_JP.UTF-8"
+rhel9_var_keymap: "jp106"
+
+#consoleblank
+rhel9_var_DisBlackout: ' consoleblank=0'
+
+#leapsecmode
+rhel9_var_leapsecmode: "leapsecmode slew"
+
+#kdump
+rhel9_var_kdump:
+  - { name: "kdump", enabled: "false", state: "stopped" }
+
+#smartd
+rhel9_var_smartd:
+  - { name: "smartd", enabled: "false", state: "stopped" }
+
+#CtrlAltDel masked
+rhel9_var_DisCtrlAltDel: "Loaded: masked"
+
+#firewalld status
+rhel9_var_firewalld:
+  - { name: "firewalld", enabled: "false", state: "stopped" }
+
+#sshport
+rhel9_var_sshPort: "Port 10022"
+
+#Enable PasswordAuthentication
+rhel9_var_PassAuth: "PasswordAuthentication yes"
+
+#logindefs
+rhel9_var_PassMinDays: "PASS_MIN_DAYS 1"
+
+
+

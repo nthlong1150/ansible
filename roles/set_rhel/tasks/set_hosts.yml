@@ -1,0 +1,10 @@
+- name: Set hosts
+  lineinfile:
+    path: /etc/hosts
+    state: "{{ item.state }}"
+    line: "{{ item.ip_address }} {{ item.canonical_name }}"
+    insertafter: EOF
+    backup: yes
+  loop: "{{ rhel_var_hosts | default([]) }}"
+  when: rhel_var_hosts is defined and rhel_var_hosts | length > 0
+  become: yes

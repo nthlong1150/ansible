@@ -1,0 +1,71 @@
+---
+# Add your content here for set_feature.yml
+# Example:
+# - name: Your task name
+#   your_module_name:
+#     your_parameter: value
+- name: Set region to Japanese
+  community.windows.win_region:
+    copy_settings: yes
+    location: "{{ win_var_location }}"
+    format: "{{ win_var_format }}"
+    unicode_language: "{{ win_var_unicode_language }}"
+  register: result_region
+  when: win_var_location is defined and win_var_format is defined and  win_var_unicode_language is defined
+
+- name: Check LanguageList
+  win_shell: ((((get-winuserlanguagelist)[0].EnglishName) | select-string "Japanese") | Measure-Object).Count
+  register: result_LanguageList
+  changed_when: False
+
+- name: Set LanguageList
+  win_shell: Set-WinUserLanguageList -LanguageList ja-JP,en-US -Force
+  when: result_LanguageList|int >= 1
+
+- name: Check Keyboard
+  win_shell: ((((get-winuserlanguagelist)[0].EnglishName) | select-string "Japanese") | Measure-Object).Count
+  register: result_Keyboard
+  changed_when: False
+
+
+- name: Set Keyboard to JP106
+  win_shell: Set-ItemProperty 'registry::HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\i8042prt\Parameters' -Name 'LayerDriver JPN' -Value 'kbd106.dll'
+  when: win_var_jp_keyboard is defined and result_Keyboard|int >= 1 and win_var_jp_keyboard == "yes"
+
+
+    #- name: Check DefaultInputMethod
+    #  win_shell: (Get-WinDefaultInputMethodOverride).InputMethodTip
+    #  register: result_DefaultInputMethod
+    #  changed_when: False
+
+    #- name: Set DefaultInputMethod
+    #  win_shell: Set-WinDefaultInputMethodOverride -InputTip "{{ win_var_DefaultInputMethod }}"
+    #  when: win_var_DefaultInputMethod is defined and result_DefaultInputMethod.stdout_lines[0] != win_var_DefaultInputMethod
+
+    #- name: Check WinUILanguageOverride
+    #  win_shell: (Get-WinUILanguageOverride).LCID
+    #  register: result_WinUILanguageOverride
+    #  changed_when: False
+
+    #- name: Set WinUILanguageOverride
+    #  win_shell: Set-WinUILanguageOverride -Language {{ win_var_WinUILanguageOverride }}
+    #  when: win_var_WinUILanguageOverride is defined and result_WinUILanguageOverride.stdout_lines[0]|int != win_var_WinUILanguageOverride
+
+
+#- name: Check  DayandTimeFormat
+#  win_shell: (Get-WinCultureFromLanguageListOptOut)
+#  register: result_WinUILanguageOverride
+#  changed_when: False
+#
+#- name: Set DayandTimeFormat
+#  win_shell: Set-WinCultureFromLanguageListOptOut -OptOut $False
+
+
+- name: Set timezone to Japan
+  win_timezone:
+    timezone:  Tokyo Standard Time
+
+
+- name: Reboot to Apply Settings
+  ansible.windows.win_reboot:
+  when: result_region.changed and result_region.restart_required

@@ -1,0 +1,21 @@
+---
+# Add your content here for set_computername.yml
+# Example:
+# - name: Your task name
+#   your_module_name:
+#     your_parameter: value
+
+- name: Change the hostname
+  ansible.windows.win_hostname:
+    name: "{{ win_var_computername }}"
+  register: res
+  when: win_var_computername is defined
+
+- name: Reboot
+  ansible.windows.win_reboot:
+  when: res.changed and win_var_computername != "" and res.reboot_required
+
+- name: Wait for reboot
+  ansible.builtin.wait_for_connection:
+    delay: 5
+    timeout: 300

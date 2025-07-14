@@ -1,0 +1,14 @@
+---
+# Add your content here for set_service.yml
+# Example:
+# - name: Your task name
+#   your_module_name:
+#     your_parameter: value
+
+- name: Set service to disabled
+  ansible.windows.win_service:
+    name: "{{ item }}"
+    start_mode: disabled                            
+    state: stopped
+  loop: "{{ win_var_disabled_services }}"
+  when: win_var_disabled_services is defined
