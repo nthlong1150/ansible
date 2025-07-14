@@ -5,16 +5,20 @@
   register: command_result
   changed_when: false
   failed_when: false
+  when: rhel9_var_update_security | default(false)
   become: true
 - name: Set subscription-manager.conf
   ansible.builtin.shell:
     sed -i -e 's/^enabled=1/enabled=0/g' /etc/yum/pluginconf.d/subscription-manager.conf
   changed_when: false
-  when: command_result.rc
+  when:
+    - rhel9_var_update_security | default(false)
+    - command_result.rc
   become: true
 - name: Yum UpdateSecurity
   yum:
     name: '*'
     security: true
     state: latest
+  when: rhel9_var_update_security | default(false)
   become: true
