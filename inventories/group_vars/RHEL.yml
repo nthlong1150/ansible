@@ -38,7 +38,6 @@ rhel9_var_PassMinDays: "PASS_MIN_DAYS 1"
 rhel9_var_update_security: true
 
 
-
 # instance logging
 rhel9_var_instance_logging: false
 
