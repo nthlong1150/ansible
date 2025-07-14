@@ -1,0 +1,11 @@
+---
+- name: Create data partition
+  community.general.parted:
+    device: "{{ rhel9_var_partition_device }}"
+    number: 1
+    state: present
+    part_end: "{{ rhel9_var_partition_size }}"
+  when:
+    - rhel9_var_partition_device is defined
+    - rhel9_var_partition_size is defined
+  become: true

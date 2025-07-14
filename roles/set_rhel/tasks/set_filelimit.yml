@@ -1,0 +1,8 @@
+---
+- name: Set file descriptor limit
+  ansible.builtin.lineinfile:
+    path: /etc/security/limits.conf
+    line: "* soft nofile {{ rhel9_var_file_limit }}"
+    create: yes
+  when: rhel9_var_file_limit is defined
+  become: true

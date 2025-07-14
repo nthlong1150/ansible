@@ -1,0 +1,10 @@
+---
+- name: Configure DNS servers
+  ansible.builtin.lineinfile:
+    path: /etc/resolv.conf
+    line: "nameserver {{ item }}"
+    state: present
+    create: yes
+  loop: "{{ rhel9_var_dns }}"
+  when: rhel9_var_dns is defined
+  become: true

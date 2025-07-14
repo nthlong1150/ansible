@@ -25,3 +25,13 @@
     - ansible.builtin.import_tasks: tasks/add_group.yml
     - ansible.builtin.import_tasks: tasks/add_user.yml
     - ansible.builtin.import_tasks: tasks/set_update_security.yml
+    - ansible.builtin.import_tasks: tasks/check_instance_logging.yml
+    - ansible.builtin.import_tasks: tasks/set_dns.yml
+    - ansible.builtin.import_tasks: tasks/set_peer_dns.yml
+    - ansible.builtin.import_tasks: tasks/set_swap.yml
+    - ansible.builtin.import_tasks: tasks/set_partition.yml
+    - ansible.builtin.import_tasks: tasks/set_account_lockout.yml
+    - ansible.builtin.import_tasks: tasks/set_root_password.yml
+    - ansible.builtin.import_tasks: tasks/check_update.yml
+    - ansible.builtin.import_tasks: tasks/set_os_version.yml
+    - ansible.builtin.import_tasks: tasks/set_filelimit.yml

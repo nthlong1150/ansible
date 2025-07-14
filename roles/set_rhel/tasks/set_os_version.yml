@@ -1,0 +1,6 @@
+---
+- name: Display OS version
+  ansible.builtin.shell: cat /etc/redhat-release
+  register: os_version
+  changed_when: false
+  when: rhel9_var_os_version is defined
