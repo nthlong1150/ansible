@@ -5,19 +5,19 @@
   tasks:
     - ansible.builtin.import_tasks: tasks/set_hostname.yml
     - ansible.builtin.import_tasks: tasks/set_kdump.yml
-#    - ansible.builtin.import_tasks: tasks/set_firewall.yml
+    - ansible.builtin.import_tasks: tasks/set_firewall.yml
     - ansible.builtin.import_tasks: tasks/set_locale.yml
     - ansible.builtin.import_tasks: tasks/set_timezone.yml
     - ansible.builtin.import_tasks: tasks/set_selinux.yml
-#    - ansible.builtin.import_tasks: tasks/set_smartd.yml
+    - ansible.builtin.import_tasks: tasks/set_smartd.yml
     - ansible.builtin.import_tasks: tasks/set_blackout.yml
     - ansible.builtin.import_tasks: tasks/set_break.yml
     - ansible.builtin.import_tasks: tasks/set_runlevel.yml
-#    - ansible.builtin.import_tasks: tasks/set_ssh_port.yml
+    - ansible.builtin.import_tasks: tasks/set_ssh_port.yml
     - ansible.builtin.import_tasks: tasks/set_ssh_rootLogin.yml
-#    - ansible.builtin.import_tasks: tasks/set_ntp.yml
-#    - ansible.builtin.import_tasks: tasks/set_leapsecmode_azure.yml
-#    - ansible.builtin.import_tasks: tasks/set_leapsecmode_aws.yml
+    - ansible.builtin.import_tasks: tasks/set_ntp.yml
+    - ansible.builtin.import_tasks: tasks/set_leapsecmode_azure.yml
+    - ansible.builtin.import_tasks: tasks/set_leapsecmode_aws.yml
     - ansible.builtin.import_tasks: tasks/set_hosts.yml
     - ansible.builtin.import_tasks: tasks/set_pass_rules.yml
     - ansible.builtin.import_tasks: tasks/set_pass_days.yml
