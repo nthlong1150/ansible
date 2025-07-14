@@ -1,0 +1,35 @@
+---
+- name: Check current swap
+  ansible.builtin.command: swapon --show
+  register: swap_result
+  changed_when: false
+  become: true
+
+- name: Create swap file
+  ansible.builtin.shell: |
+    dd if=/dev/zero of=/swapfile bs=1M count={{ rhel9_var_swap_size_mb }}
+    chmod 600 /swapfile
+    mkswap /swapfile
+  when:
+    - rhel9_var_swap_size_mb is defined
+    - swap_result.stdout == ""
+  become: true
+
+- name: Enable swap file
+  ansible.builtin.command: swapon /swapfile
+  when:
+    - rhel9_var_swap_size_mb is defined
+    - swap_result.stdout == ""
+  become: true
+
+- name: Persist swap in fstab
+  ansible.builtin.mount:
+    name: none
+    src: /swapfile
+    fstype: swap
+    opts: sw
+    state: present
+  when:
+    - rhel9_var_swap_size_mb is defined
+    - swap_result.stdout == ""
+  become: true

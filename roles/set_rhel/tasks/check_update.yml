@@ -1,0 +1,13 @@
+---
+- name: Check for package updates
+  ansible.builtin.shell: yum check-update
+  register: update_info
+  changed_when: false
+  failed_when: false
+  when: rhel9_var_check_update | default(false)
+
+- name: Display kernel version
+  ansible.builtin.shell: uname -r
+  register: kernel_version
+  changed_when: false
+  when: rhel9_var_check_update | default(false)

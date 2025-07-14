@@ -34,5 +34,40 @@ rhel9_var_PassAuth: "PasswordAuthentication yes"
 #logindefs
 rhel9_var_PassMinDays: "PASS_MIN_DAYS 1"
 
+# update-security
+rhel9_var_update_security: true
 
 
+
+# instance logging
+rhel9_var_instance_logging: false
+
+# DNS servers
+rhel9_var_dns:
+  - 8.8.8.8
+  - 8.8.4.4
+
+# peer DNS setting
+rhel9_var_peer_dns: "yes"
+
+# swap size in MB
+rhel9_var_swap_size_mb: 1024
+
+# partition device
+rhel9_var_partition_device: /dev/sdb
+rhel9_var_partition_size: 10G
+
+# account lockout attempts
+rhel9_var_account_lockout_attempts: 5
+
+# root password
+rhel9_var_root_password: "Passw0rd!"
+
+# check update flag
+rhel9_var_check_update: false
+
+# os version (display only)
+rhel9_var_os_version: RHEL9
+
+# file limit
+rhel9_var_file_limit: 65535

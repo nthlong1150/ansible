@@ -1,0 +1,9 @@
+---
+- name: Configure PEERDNS
+  ansible.builtin.lineinfile:
+    path: "/etc/sysconfig/network-scripts/ifcfg-{{ rhel9_var_interface | default('eth0') }}"
+    regexp: '^PEERDNS='
+    line: "PEERDNS={{ rhel9_var_peer_dns }}"
+    create: yes
+  when: rhel9_var_peer_dns is defined
+  become: true

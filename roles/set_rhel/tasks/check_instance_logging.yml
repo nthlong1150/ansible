@@ -1,0 +1,22 @@
+---
+- name: Get instance id
+  ansible.builtin.shell: curl -s http://169.254.169.254/latest/meta-data/instance-id
+  register: instance_id
+  changed_when: false
+  failed_when: false
+  when: rhel9_var_instance_logging | default(false)
+
+- name: Enable persistent journald
+  ansible.builtin.lineinfile:
+    path: /etc/systemd/journald.conf
+    regexp: '^#?Storage='
+    line: 'Storage=persistent'
+  when: rhel9_var_instance_logging | default(false)
+  become: true
+
+- name: Restart journald
+  ansible.builtin.service:
+    name: systemd-journald
+    state: restarted
+  when: rhel9_var_instance_logging | default(false)
+  become: true
