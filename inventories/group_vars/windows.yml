@@ -44,3 +44,91 @@ win_var_logonNotif_EmitLILI: 1
 # ログイン情報のキャッシュ
 # 0：キャッシュを無効　未設定でデフォルト（10）
 win_var_logonNotif_CachedLogonsCount: 0
+
+# コンピュータ名
+win_var_computername: "WINHOST"
+
+# 無効化するローカルユーザー
+win_var_disabledUsers:
+  - Guest
+
+# 無効化するサービス
+win_var_disabled_services:
+  - Spooler
+
+# DNS サーバー
+win_var_dns:
+  - 8.8.8.8
+  - 8.8.4.4
+
+# イベントログ設定
+win_var_eventlog:
+  - { name: Application, maximum_size: 16384, overflow_action: overwrite, state: present }
+
+# インストールする Windows 機能
+win_var_feature_install:
+  - Telnet-Client
+
+# アンインストールする Windows 機能
+win_var_feature_uninstall:
+  - Simple-TCPIP
+
+# ローカルグループ
+win_var_groups:
+  - Administrators
+
+# hosts に登録するエントリ
+win_var_hosts:
+  - { canonical_name: server.local, ip_address: 192.168.0.10, state: present }
+
+# IE のプロキシ設定を取り込むか
+win_var_importIE: 0
+
+# no_proxy 環境変数
+win_var_noproxy: "localhost,127.0.0.1"
+
+# NTP サーバー
+win_var_ntp: time.windows.com
+
+# 登録組織名
+win_var_organization: "Sample Org"
+
+# 登録所有者名
+win_var_owner: "Administrator"
+
+# パスワードポリシー
+win_var_passwordPolicy:
+  minpwlen: 8
+  maxpwage: 90
+  minpwage: 0
+  uniquepw: 5
+  LOCKOUTTHRESHOLD: 5
+  LOCKOUTDURATION: 30
+  LOCKOUTWINDOW: 30
+  ClearTextPassword: 0
+  PasswordComplexity: 1
+
+# プロキシ設定
+win_var_proxy:
+  - { proxy_server: http://proxy.example.com:8080, bypass: localhost }
+
+# RDP ポート番号
+win_var_rdp_port: 3389
+
+# タイムゾーン
+win_var_timezone: "Tokyo Standard Time"
+
+# UserAccountControl 設定 (0: 無効 1: 有効)
+win_var_uac: 1
+
+# 追加するローカルユーザー
+win_var_user:
+  - { name: testuser, password: Passw0rd!, state: present, password_never_expires: true, groups: Administrators }
+
+# Windows Update 設定
+win_var_winupdate:
+  AUOptions: 4
+  NoAutoUpdate: 0
+
+# ワークグループ名
+win_var_workgroup: WORKGROUP
