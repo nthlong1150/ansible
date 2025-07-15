@@ -1,12 +1,13 @@
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+# Introduction
+This repository provides Ansible playbooks for configuring Windows systems. The playbooks use tasks stored under `roles/set_windows` to perform typical setup operations such as configuring networking and installing features.
 
 # Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+1. Prepare an inventory. Copy `inventories/hosts_sample` to `inventories/hosts` and update it with the connection details for your Windows hosts.
+2. Execute the playbook with:
+
+```bash
+ansible-playbook windows_setup.yml
+```
 
 # Build and Test
 TODO: Describe and show how to build your code and run the tests. 

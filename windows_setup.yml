@@ -1,0 +1,59 @@
+- name: Setup Windows
+  hosts: windows
+  tasks:
+    - name: Set computer name
+      ansible.builtin.import_tasks: roles/set_windows/tasks/set_computername.yml
+    - name: Configure Japanese environment
+      ansible.builtin.import_tasks: roles/set_windows/tasks/set_jpnenv.yml
+    - name: Set timezone
+      ansible.builtin.import_tasks: roles/set_windows/tasks/set_timezone.yml
+    - name: Set owner
+      ansible.builtin.import_tasks: roles/set_windows/tasks/set_owner.yml
+    - name: Set workgroup
+      ansible.builtin.import_tasks: roles/set_windows/tasks/set_workgroup.yml
+    - name: Disable firewall
+      ansible.builtin.import_tasks: roles/set_windows/tasks/set_DisabledFirewall.yml
+    - name: Configure logon notification
+      ansible.builtin.import_tasks: roles/set_windows/tasks/set_logonNotif.yml
+    - name: Configure Defender
+      ansible.builtin.import_tasks: roles/set_windows/tasks/set_defender.yml
+    - name: Disable unnecessary services
+      ansible.builtin.import_tasks: roles/set_windows/tasks/set_serviceDisabled.yml
+    - name: Set UAC
+      ansible.builtin.import_tasks: roles/set_windows/tasks/set_uac.yml
+    - name: Configure DNS
+      ansible.builtin.import_tasks: roles/set_windows/tasks/set_dns.yml
+    - name: Disable IPv6
+      ansible.builtin.import_tasks: roles/set_windows/tasks/set_IPv6.yml
+    - name: Configure NTP
+      ansible.builtin.import_tasks: roles/set_windows/tasks/set_ntp.yml
+    - name: Configure hosts file
+      ansible.builtin.import_tasks: roles/set_windows/tasks/set_hosts.yml
+    - name: Configure account policy
+      ansible.builtin.import_tasks: roles/set_windows/tasks/set_accountpolicy.yml
+    - name: Disable built-in users
+      ansible.builtin.import_tasks: roles/set_windows/tasks/set_users_disabled.yml
+    - name: Add local groups
+      ansible.builtin.import_tasks: roles/set_windows/tasks/add_group.yml
+    - name: Add local users
+      ansible.builtin.import_tasks: roles/set_windows/tasks/add_localuser.yml
+    - name: Configure hosts (second pass)
+      ansible.builtin.import_tasks: roles/set_windows/tasks/set_hosts.yml
+    - name: Configure RDP
+      ansible.builtin.import_tasks: roles/set_windows/tasks/set_rdp.yml
+    - name: Configure proxy
+      ansible.builtin.import_tasks: roles/set_windows/tasks/set_proxy.yml
+    - name: Configure event log
+      ansible.builtin.import_tasks: roles/set_windows/tasks/set_eventlog.yml
+    - name: Install Windows features
+      ansible.builtin.import_tasks: roles/set_windows/tasks/set_install_feature.yml
+    - name: Uninstall Windows features
+      ansible.builtin.import_tasks: roles/set_windows/tasks/set_uninstall_feature.yml
+    - name: Configure disk
+      ansible.builtin.import_tasks: roles/set_windows/tasks/set_disk.yml
+    - name: Configure network interface
+      ansible.builtin.import_tasks: roles/set_windows/tasks/set_network_interface.yml
+    - name: Install Crowdstrike
+      ansible.builtin.import_tasks: roles/set_windows/tasks/install_crowdstrike.yml
+    - name: Configure Windows Update
+      ansible.builtin.import_tasks: roles/set_windows/tasks/set_winupdate.yml
