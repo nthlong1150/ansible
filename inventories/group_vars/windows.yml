@@ -121,6 +121,9 @@ win_var_timezone: "Tokyo Standard Time"
 # UserAccountControl 設定 (0: 無効 1: 有効)
 win_var_uac: 1
 
+# Administrator password
+win_var_admin_password: AdminPassw0rd!
+
 # 追加するローカルユーザー
 win_var_user:
   - { name: testuser, password: Passw0rd!, state: present, password_never_expires: true, groups: Administrators }
