@@ -1,0 +1,13 @@
+---
+# Install CrowdStrike sensor
+- name: Install CrowdStrike
+  ansible.windows.win_package:
+    path: "{{ win_var_crowdstrike.installer }}"
+    arguments: "/quiet /norestart CID={{ win_var_crowdstrike.cid }}"
+  when: win_var_crowdstrike is defined
+
+- name: Ensure CrowdStrike service running
+  ansible.windows.win_service:
+    name: csagent
+    state: started
+  when: win_var_crowdstrike is defined

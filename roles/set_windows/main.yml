@@ -32,4 +32,7 @@
     - include: tasks/set_eventlog.yml
     - include: tasks/set_install_feature.yml
     - include: tasks/set_uninstall_feature.yml
+    - include: tasks/set_disk.yml
+    - include: tasks/set_network_interface.yml
+    - include: tasks/install_crowdstrike.yml
     - include: tasks/set_winupdate.yml

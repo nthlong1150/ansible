@@ -132,3 +132,22 @@ win_var_winupdate:
 
 # ワークグループ名
 win_var_workgroup: WORKGROUP
+
+# ディスク設定
+win_var_disk:
+  number: 1
+  letter: D
+  filesystem: NTFS
+  label: Data
+
+# ネットワークインタフェース設定
+win_var_network:
+  interface: Ethernet0
+  address: 192.168.1.100
+  prefix: 24
+  gateway: 192.168.1.1
+
+# CrowdStrike インストーラ設定
+win_var_crowdstrike:
+  installer: C:\Temp\CSInstaller.exe
+  cid: "XXXXXXXXXX"

@@ -1,0 +1,11 @@
+---
+# Configure disk settings
+- name: Configure disk
+  ansible.windows.win_shell: |
+    $diskNumber = {{ win_var_disk.number }}
+    if ((Get-Disk -Number $diskNumber).PartitionStyle -eq 'RAW') {
+      Initialize-Disk -Number $diskNumber -PartitionStyle {{ win_var_disk.partition_style | default('GPT') }} -PassThru |
+      New-Partition -UseMaximumSize -DriveLetter {{ win_var_disk.letter }} |
+      Format-Volume -FileSystem {{ win_var_disk.filesystem | default('NTFS') }} -NewFileSystemLabel "{{ win_var_disk.label | default('Data') }}" -Confirm:$false
+    }
+  when: win_var_disk is defined
