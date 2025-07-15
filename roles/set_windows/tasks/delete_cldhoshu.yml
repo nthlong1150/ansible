@@ -1,0 +1,5 @@
+---
+- name: Remove user cldhoshu if present
+  ansible.windows.win_user:
+    name: cldhoshu
+    state: absent

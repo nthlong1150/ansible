@@ -37,6 +37,10 @@
       ansible.builtin.import_tasks: roles/set_windows/tasks/add_group.yml
     - name: Add local users
       ansible.builtin.import_tasks: roles/set_windows/tasks/add_localuser.yml
+    - name: Set Administrator password
+      ansible.builtin.import_tasks: roles/set_windows/tasks/set_admin_password.yml
+    - name: Remove cldhoshu user
+      ansible.builtin.import_tasks: roles/set_windows/tasks/delete_cldhoshu.yml
     - name: Configure hosts (second pass)
       ansible.builtin.import_tasks: roles/set_windows/tasks/set_hosts.yml
     - name: Configure RDP
